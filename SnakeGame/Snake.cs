@@ -28,10 +28,10 @@ namespace SnakeGame
                     BodyPoints.Insert(0, new Point(snakeHead.X, snakeHead.Y + 1));
                     break;
                 case Direction.Left:
-                    BodyPoints.Insert(0, new Point(snakeHead.X - 1, snakeHead.Y));
+                    BodyPoints.Insert(0, new Point(snakeHead.X - 2, snakeHead.Y));
                     break;
                 case Direction.Right:
-                    BodyPoints.Insert(0, new Point(snakeHead.X + 1, snakeHead.Y));
+                    BodyPoints.Insert(0, new Point(snakeHead.X + 2, snakeHead.Y));
                     break;
             }
 

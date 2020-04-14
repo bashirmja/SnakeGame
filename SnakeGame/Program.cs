@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -11,6 +12,7 @@ namespace SnakeGame
 
         static async Task Main()
         {
+            var ground = new PlayGround(25, 100, 10);
             snake= new Snake(new Point(60, 15));
 
             _ = Task.Run(() => GetKeyAsync());
@@ -20,15 +22,42 @@ namespace SnakeGame
             {
                 Console.Clear();
 
+                for (int h = 0; h < ground.Height; h++)
+                {
+
+                    Console.SetCursorPosition(0, h);
+                    Console.Write("|");
+                    Console.SetCursorPosition(ground.Width, h);
+                    Console.Write("|");
+                }
+
+                for (int w = 1; w < ground.Width; w++)
+                {
+                    Console.SetCursorPosition(w, 0);
+                    Console.Write("-");
+                    Console.SetCursorPosition(w, ground.Height-1);
+                    Console.Write("-");
+                }
+
+
                 foreach (var item in snake.BodyPoints.ToList())
                 {
                     Console.SetCursorPosition(item.X, item.Y);
-                    Console.Write("*");
+                    Console.Write("o");
+                }
+
+                foreach (var item in ground.FoodPoints.ToList())
+                {
+                    Console.SetCursorPosition(item.X, item.Y);
+                    Console.Write("+");
                 }
 
 
 
-                await Task.Delay(10);
+                //if (snake.BodyPoints.First()==)
+
+
+                await Task.Delay(50);
             }
         }
 
