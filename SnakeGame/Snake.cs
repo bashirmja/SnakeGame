@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace SnakeGame
@@ -15,7 +16,7 @@ namespace SnakeGame
             };
         }
 
-        public void ChangeDirection(Direction dir)
+        public void Move(Direction dir, List<Point> foodPoints)
         {
             var snakeHead = BodyPoints.First();
 
@@ -35,24 +36,30 @@ namespace SnakeGame
                     break;
             }
 
-            BodyPoints.Remove(BodyPoints.Last());
+            if (!EatingCheck(foodPoints))
+            {
+                BodyPoints.Remove(BodyPoints.Last());
+
+            }
+
+
 
         }
 
-        public void EatingCheck(List<Point> foodPoints)
+        public bool EatingCheck(List<Point> foodPoints)
         {
             var snakeHead = BodyPoints.First();
 
             foreach (var item in foodPoints.ToList())
             {
-                if (snakeHead==item)
+                if (snakeHead == item)
                 {
                     foodPoints.Remove(item);
-                    BodyPoints.Insert(0, snakeHead);
+                    return true;
+
                 }
-
             }
-
+            return false;
         }
     }
 }
