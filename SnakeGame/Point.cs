@@ -1,25 +1,25 @@
 ﻿namespace SnakeGame
 {
-        public class Point
-        {
-            public Point(int x, int y)
-            {
-                X = x;
-                Y = y;
-            }
+    public class Point
+    {
+        public int Top { get; set; }
+        public int Left { get; set; }
 
-            public int Y { get; set; }
-            public int X { get; set; }
+        public Point(int left, int top)
+        {
+            Left = left;
+            Top = top;
+        }
 
         public static bool operator ==(Point First, Point Second)
         {
-            return First.X == Second.X && First.Y == Second.Y;
+            return First.Left == Second.Left && First.Top == Second.Top;
 
         }
 
         public static bool operator !=(Point First, Point Second)
         {
-            return First.X != Second.X || First.Y != Second.Y;
+            return First.Left != Second.Left || First.Top != Second.Top;
 
         }
     }

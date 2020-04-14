@@ -1,54 +1,55 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace SnakeGame
 {
     class Snake
     {
-        public List<Point> BodyPoints { get; set; }
+        public List<Point> SnakeBodyPoints { get; set; }
 
-        public Snake(Point startingPoint)
+        public Snake(Point firstBodyPoint)
         {
-            BodyPoints = new List<Point>
+            SnakeBodyPoints = new List<Point>
             {
-                startingPoint
+                firstBodyPoint
             };
         }
 
-        public void Move(Direction dir, List<Point> foodPoints)
+        public void MoveingSnake(Direction dir, PlayGround ground)
         {
-            var snakeHead = BodyPoints.First();
+            var snakeHead = SnakeBodyPoints.First();
 
-            switch (dir)
+            
+
+            Point newHead = dir switch
             {
-                case Direction.Up:
-                    BodyPoints.Insert(0, new Point(snakeHead.X, snakeHead.Y - 1));
-                    break;
-                case Direction.Down:
-                    BodyPoints.Insert(0, new Point(snakeHead.X, snakeHead.Y + 1));
-                    break;
-                case Direction.Left:
-                    BodyPoints.Insert(0, new Point(snakeHead.X - 2, snakeHead.Y));
-                    break;
-                case Direction.Right:
-                    BodyPoints.Insert(0, new Point(snakeHead.X + 2, snakeHead.Y));
-                    break;
+                Direction.Up => new Point(snakeHead.Left, snakeHead.Top - 1),
+                Direction.Down => new Point(snakeHead.Left, snakeHead.Top + 1),
+                Direction.Left => new Point(snakeHead.Left - 2, snakeHead.Top),
+                Direction.Right => new Point(snakeHead.Left + 2, snakeHead.Top),
+                _ => null,
+            };
+
+            if (newHead.Left == 0 || newHead.Left == ground.Width)
+            {
+                return;
+            }
+            if (newHead.Top == 0 || newHead.Top == ground.Height -1)
+            {
+                return;
             }
 
-            if (!EatingCheck(foodPoints))
+            SnakeBodyPoints.Insert(0, newHead);
+
+            if (!EatingCheck(ground.FoodPoints))
             {
-                BodyPoints.Remove(BodyPoints.Last());
-
+                SnakeBodyPoints.Remove(SnakeBodyPoints.Last());
             }
-
-
-
         }
 
         public bool EatingCheck(List<Point> foodPoints)
         {
-            var snakeHead = BodyPoints.First();
+            var snakeHead = SnakeBodyPoints.First();
 
             foreach (var item in foodPoints.ToList())
             {
@@ -56,10 +57,25 @@ namespace SnakeGame
                 {
                     foodPoints.Remove(item);
                     return true;
-
                 }
             }
             return false;
         }
+
+        //public bool HitingWallCheck(int height, int width)
+        //{
+        //    var snakeHead = SnakeBodyPoints.First();
+
+        //    if (snakeHead.Left==1 || snakeHead.Left==width)
+        //    {
+        //        return true;
+        //    }
+
+        //    if (snakeHead.Top == 1 || snakeHead.Top == height-1 )
+        //    {
+        //        return true;
+        //    }
+        //    return false;
+        //}
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace SnakeGame
 {
@@ -17,6 +16,7 @@ namespace SnakeGame
             Height = height;
             Width = width;
             FoodPoints = new List<Point>();
+
             for (int i = 0; i < FoodsNumber; i++)
             {
                 FoodPoints.Add(NewFood());
@@ -26,12 +26,12 @@ namespace SnakeGame
         public Point NewFood()
         {
             var random = new Random();
+            
+            var top = random.Next(2, Height - 1);
+            var left = random.Next(2, Width - 1);
+            left = left % 2 != 0 ? left - 1 : left;
 
-            var x = random.Next(1, Width - 1);
-            var y = random.Next(1, Height - 1);
-
-            return new Point(x%2!=0? x-1:x, y);
-
+            return new Point(left, top);
         }
 
 
