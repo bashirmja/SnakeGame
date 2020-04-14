@@ -40,13 +40,13 @@ namespace SnakeGame
                 }
 
 
-                foreach (var item in snake.BodyPoints.ToList())
+                foreach (var item in snake.BodyPoints)
                 {
                     Console.SetCursorPosition(item.X, item.Y);
                     Console.Write("o");
                 }
 
-                foreach (var item in ground.FoodPoints.ToList())
+                foreach (var item in ground.FoodPoints)
                 {
                     Console.SetCursorPosition(item.X, item.Y);
                     Console.Write("+");
@@ -54,7 +54,7 @@ namespace SnakeGame
 
 
 
-                //if (snake.BodyPoints.First()==)
+                snake.EatingCheck(ground.FoodPoints);
 
 
                 await Task.Delay(50);

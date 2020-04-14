@@ -39,5 +39,20 @@ namespace SnakeGame
 
         }
 
+        public void EatingCheck(List<Point> foodPoints)
+        {
+            var snakeHead = BodyPoints.First();
+
+            foreach (var item in foodPoints.ToList())
+            {
+                if (snakeHead==item)
+                {
+                    foodPoints.Remove(item);
+                    BodyPoints.Insert(0, snakeHead);
+                }
+
+            }
+
+        }
     }
 }
