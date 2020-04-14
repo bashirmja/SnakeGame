@@ -1,29 +1,34 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace SnakeGame
 {
     class Program
     {
-        static ConsoleKey _arrowkey = ConsoleKey.RightArrow;
-        static int x = 60;
-        static int y = 15;
+        private static Snake snake;
 
         static async Task Main()
         {
-            _ = Task.Run(() => GetKeyAsync());
+            snake= new Snake(new Point(60, 15));
 
+            _ = Task.Run(() => GetKeyAsync());
             Console.CursorVisible = false;
 
             while (true)
             {
                 Console.Clear();
-                HandlePosition();
-                Console.SetCursorPosition(x, y);
 
-                Console.Write("*");
+                foreach (var item in snake.BodyPoints.ToList())
+                {
+                    Console.SetCursorPosition(item.X, item.Y);
+                    Console.Write("*");
+                }
 
-                await Task.Delay(200);
+
+
+                await Task.Delay(10);
             }
         }
 
@@ -36,38 +41,21 @@ namespace SnakeGame
                 switch (key)
                 {
                     case ConsoleKey.DownArrow:
+                        snake.ChangeDirection(Direction.Down);
+                        break;
                     case ConsoleKey.UpArrow:
+                        snake.ChangeDirection(Direction.Up);
+                        break;
                     case ConsoleKey.LeftArrow:
+                        snake.ChangeDirection(Direction.Left);
+                        break;
                     case ConsoleKey.RightArrow:
-                        _arrowkey = key;
+                        snake.ChangeDirection(Direction.Right);
                         break;
                 }
             }
         }
 
-        static void HandlePosition()
-        {
-            switch (_arrowkey)
-            {
-                case ConsoleKey.DownArrow:
-                    y += 1;
-                    break;
 
-                case ConsoleKey.UpArrow:
-                    y -= 1;
-                    break;
-
-                case ConsoleKey.LeftArrow:
-                    x -= 2;
-                    break;
-
-                case ConsoleKey.RightArrow:
-                    x += 2;
-                    break;
-
-                default:
-                    throw new Exception("Error in Key Handler");
-            }
-        }
     }
 }
