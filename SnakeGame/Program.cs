@@ -20,25 +20,24 @@ namespace SnakeGame
 
                 var key = Console.ReadKey(true).Key;
                 ClearSnakeTail();
-                switch (key)
+                UpdateStatus? status = key switch
                 {
-                    case ConsoleKey.DownArrow:
-                        snake.MoveingSnake(Direction.Down,ground);
-                        break;
-                    case ConsoleKey.UpArrow:
-                        snake.MoveingSnake(Direction.Up, ground);
-                        break;
-                    case ConsoleKey.LeftArrow:
-                        snake.MoveingSnake(Direction.Left, ground);
-                        break;
-                    case ConsoleKey.RightArrow:
-                        snake.MoveingSnake(Direction.Right, ground);
-                        break;
-                    case ConsoleKey.F1:
-                        Console.Clear();
-                        Environment.Exit(0);
-                        break;
+                    ConsoleKey.DownArrow => snake.MoveingSnake(Direction.Down, ground),
+                    ConsoleKey.UpArrow => snake.MoveingSnake(Direction.Up, ground),
+                    ConsoleKey.LeftArrow => snake.MoveingSnake(Direction.Left, ground),
+                    ConsoleKey.RightArrow => snake.MoveingSnake(Direction.Right, ground),
+                    _ => null,
+                };
+                if (status == UpdateStatus.EndOfFoods)
+                {
+                    DrawSnake();
+                    Console.SetCursorPosition(0, 26);
+                    Console.WriteLine("You are a winner! Hit Enter to finish the game.");
+                    Console.ReadLine();
+                    Environment.Exit(0);
                 }
+
+
 
                 await Task.Delay(100);
             }
@@ -46,7 +45,7 @@ namespace SnakeGame
 
         private static void GameSetup()
         {
-            ground = new PlayGround(25, 50, 20);
+            ground = new PlayGround(25, 50, 5);
             snake = new Snake(new Point(40, 15));
         }
 
@@ -57,8 +56,8 @@ namespace SnakeGame
             Console.Clear();
             Console.WindowWidth = 51;
             Console.BufferWidth = 51;
-            Console.WindowHeight = 26;
-            Console.BufferHeight = 26;
+            Console.WindowHeight = 27;
+            Console.BufferHeight = 35;
         }
 
         private static void DrawAllComponents()
@@ -91,14 +90,16 @@ namespace SnakeGame
             var list = snake.SnakeBodyPoints.ToList();
             foreach (var item in list)
             {
-                Console.ForegroundColor = ConsoleColor.Green;
+                
                 Console.SetCursorPosition(item.Left, item.Top);
                 if (item == list.First())
                 {
+                    Console.ForegroundColor = ConsoleColor.Green;
                     Console.Write("O");
                 }
                 else
                 {
+                    Console.ForegroundColor = ConsoleColor.DarkGreen;
                     Console.Write("o");
                 }
             }

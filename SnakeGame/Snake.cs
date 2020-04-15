@@ -15,11 +15,9 @@ namespace SnakeGame
             };
         }
 
-        public void MoveingSnake(Direction dir, PlayGround ground)
+        public UpdateStatus MoveingSnake(Direction dir, PlayGround ground)
         {
             var snakeHead = SnakeBodyPoints.First();
-
-            
 
             Point newHead = dir switch
             {
@@ -30,52 +28,39 @@ namespace SnakeGame
                 _ => null,
             };
 
-            if (newHead.Left == 0 || newHead.Left == ground.Width)
+            if (newHead.Left != 0 && newHead.Left != ground.Width && newHead.Top != 0 && newHead.Top != ground.Height - 1)
             {
-                return;
-            }
-            if (newHead.Top == 0 || newHead.Top == ground.Height -1)
-            {
-                return;
-            }
+                SnakeBodyPoints.Insert(0, newHead);
 
-            SnakeBodyPoints.Insert(0, newHead);
 
-            if (!EatingCheck(ground.FoodPoints))
-            {
-                SnakeBodyPoints.Remove(SnakeBodyPoints.Last());
-            }
-        }
-
-        public bool EatingCheck(List<Point> foodPoints)
-        {
-            var snakeHead = SnakeBodyPoints.First();
-
-            foreach (var item in foodPoints.ToList())
-            {
-                if (snakeHead == item)
+                var flag = true;
+                foreach (var item in ground.FoodPoints.ToList())
                 {
-                    foodPoints.Remove(item);
-                    return true;
+                    if (newHead == item)
+                    {
+                        ground.FoodPoints.Remove(item);
+                        flag = false;
+                    }
                 }
+
+                if (flag)
+                {
+                    SnakeBodyPoints.Remove(SnakeBodyPoints.Last());
+                }
+
+                if (ground.FoodPoints.Count() == 0)
+                {
+                    return UpdateStatus.EndOfFoods;
+                }
+                return UpdateStatus.ateFood;
             }
-            return false;
+            else
+            {
+                return UpdateStatus.BoardersHited;
+            }
         }
 
-        //public bool HitingWallCheck(int height, int width)
-        //{
-        //    var snakeHead = SnakeBodyPoints.First();
+  
 
-        //    if (snakeHead.Left==1 || snakeHead.Left==width)
-        //    {
-        //        return true;
-        //    }
-
-        //    if (snakeHead.Top == 1 || snakeHead.Top == height-1 )
-        //    {
-        //        return true;
-        //    }
-        //    return false;
-        //}
     }
 }
