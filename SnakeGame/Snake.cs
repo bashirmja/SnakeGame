@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace SnakeGame
@@ -6,16 +7,36 @@ namespace SnakeGame
     class Snake
     {
         public List<Point> SnakeBodyPoints { get; set; }
+        public List<Point> FoodPoints { get; set; }
 
-        public Snake(Point firstBodyPoint)
+        public int PlayGroundWidth { get; set; }
+        public int PlayGroundHeight { get; set; }
+
+
+        public Snake(Point firstBodyPoint, int height, int width, int FoodsNumber)
         {
             SnakeBodyPoints = new List<Point>
             {
                 firstBodyPoint
             };
+            PlayGroundHeight = height;
+            PlayGroundWidth = width;
+            FoodPoints = new List<Point>();
+
+            for (int i = 0; i < FoodsNumber; i++)
+            {
+                var random = new Random();
+
+                var top = random.Next(2, PlayGroundHeight - 1);
+                var left = random.Next(2, PlayGroundWidth - 1);
+                left = left % 2 != 0 ? left - 1 : left;
+
+                FoodPoints.Add(new Point(left, top));
+            }
         }
 
-        public UpdateStatus MoveingSnake(Direction dir, PlayGround ground)
+
+        public UpdateStatus MoveingSnake(Direction dir)
         {
             var snakeHead = SnakeBodyPoints.First();
 
@@ -28,17 +49,17 @@ namespace SnakeGame
                 _ => null,
             };
 
-            if (newHead.Left != 0 && newHead.Left != ground.Width && newHead.Top != 0 && newHead.Top != ground.Height - 1)
+            if (newHead.Left != 0 && newHead.Left != PlayGroundWidth && newHead.Top != 0 && newHead.Top != PlayGroundHeight - 1)
             {
                 SnakeBodyPoints.Insert(0, newHead);
 
 
                 var flag = true;
-                foreach (var item in ground.FoodPoints.ToList())
+                foreach (var item in FoodPoints.ToList())
                 {
                     if (newHead == item)
                     {
-                        ground.FoodPoints.Remove(item);
+                        FoodPoints.Remove(item);
                         flag = false;
                     }
                 }
@@ -48,7 +69,7 @@ namespace SnakeGame
                     SnakeBodyPoints.Remove(SnakeBodyPoints.Last());
                 }
 
-                if (ground.FoodPoints.Count() == 0)
+                if (FoodPoints.Count() == 0)
                 {
                     return UpdateStatus.EndOfFoods;
                 }
@@ -60,7 +81,7 @@ namespace SnakeGame
             }
         }
 
-  
+
 
     }
 }

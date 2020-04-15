@@ -7,11 +7,10 @@ namespace SnakeGame
     class Program
     {
         private static Snake snake;
-        private static PlayGround ground;
 
         static async Task Main()
         {
-            GameSetup();
+            snake = new Snake(new Point(40, 15), 25, 50, 5);
             SetupConsole();
 
             while (true)
@@ -22,10 +21,10 @@ namespace SnakeGame
                 ClearSnakeTail();
                 UpdateStatus? status = key switch
                 {
-                    ConsoleKey.DownArrow => snake.MoveingSnake(Direction.Down, ground),
-                    ConsoleKey.UpArrow => snake.MoveingSnake(Direction.Up, ground),
-                    ConsoleKey.LeftArrow => snake.MoveingSnake(Direction.Left, ground),
-                    ConsoleKey.RightArrow => snake.MoveingSnake(Direction.Right, ground),
+                    ConsoleKey.DownArrow => snake.MoveingSnake(Direction.Down),
+                    ConsoleKey.UpArrow => snake.MoveingSnake(Direction.Up),
+                    ConsoleKey.LeftArrow => snake.MoveingSnake(Direction.Left),
+                    ConsoleKey.RightArrow => snake.MoveingSnake(Direction.Right),
                     _ => null,
                 };
                 if (status == UpdateStatus.EndOfFoods)
@@ -45,8 +44,6 @@ namespace SnakeGame
 
         private static void GameSetup()
         {
-            ground = new PlayGround(25, 50, 5);
-            snake = new Snake(new Point(40, 15));
         }
 
         private static void SetupConsole()
@@ -77,7 +74,7 @@ namespace SnakeGame
 
         private static void DrawFoods()
         {
-            foreach (var item in ground.FoodPoints.ToList())
+            foreach (var item in snake.FoodPoints.ToList())
             {
                 Console.ForegroundColor = ConsoleColor.White;
                 Console.SetCursorPosition(item.Left, item.Top);
@@ -90,16 +87,14 @@ namespace SnakeGame
             var list = snake.SnakeBodyPoints.ToList();
             foreach (var item in list)
             {
-                
+                Console.ForegroundColor = ConsoleColor.Green;
                 Console.SetCursorPosition(item.Left, item.Top);
                 if (item == list.First())
                 {
-                    Console.ForegroundColor = ConsoleColor.Green;
                     Console.Write("O");
                 }
                 else
                 {
-                    Console.ForegroundColor = ConsoleColor.DarkGreen;
                     Console.Write("o");
                 }
             }
@@ -107,24 +102,24 @@ namespace SnakeGame
 
         private static void DrawHorisantalBoarders()
         {
-            for (int w = 1; w < ground.Width; w++)
+            for (int w = 1; w < snake.PlayGroundWidth; w++)
             {
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.SetCursorPosition(w, 0);
                 Console.Write("_");
-                Console.SetCursorPosition(w, ground.Height - 1);
+                Console.SetCursorPosition(w, snake.PlayGroundHeight - 1);
                 Console.Write("_");
             }
         }
 
         private static void DrawVerticalBoarders()
         {
-            for (int h = 1; h < ground.Height; h++)
+            for (int h = 1; h < snake.PlayGroundHeight; h++)
             {
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.SetCursorPosition(0, h);
                 Console.Write("|");
-                Console.SetCursorPosition(ground.Width, h);
+                Console.SetCursorPosition(snake.PlayGroundWidth, h);
                 Console.Write("|");
             }
         }
